@@ -7,6 +7,6 @@ const router = express.Router();
 //routing
 //REGISTER || METHOD POST
 
-router.post("./register", registerController);
+router.post("/register", registerController);
 
 export default router;
