@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Layout from "./../../components/layout/layout";
+import Layout from "../../components/layout/layout";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -13,9 +13,10 @@ const Register = () => {
   const [address, setAddress] = useState("");
   const navigate = useNavigate();
 
-  //FORM FUNCTION
+  // FORM FUNCTION
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(name, email, password, phone, address);
     try {
       const res = await axios.post("/api/v1/auth/register", {
         name,
@@ -50,6 +51,7 @@ const Register = () => {
               id="exampleInputEmail1"
               placeholder="Enter Your Name"
               required
+              autoFocus
             />
           </div>
           <div className="mb-3">
