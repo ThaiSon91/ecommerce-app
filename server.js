@@ -8,6 +8,7 @@ import dotenv from "dotenv";
 import morgan from "morgan";
 import connectDB from "./config/db.js";
 import authRouters from "./routers/auth.router.js";
+import categoryRouters from "./routers/category.router.js";
 import cors from "cors";
 
 //comfig env
@@ -26,6 +27,7 @@ app.use(morgan("dev"));
 
 //routers
 app.use("/api/v1/auth", authRouters);
+app.use("/api/v1/category", categoryRouters);
 
 //rest api
 app.get("/", (req, res) => {
