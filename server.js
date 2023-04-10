@@ -10,6 +10,7 @@ import connectDB from "./config/db.js";
 import authRouters from "./routers/auth.router.js";
 import categoryRouters from "./routers/category.router.js";
 import cors from "cors";
+import productRouters from "./routers/product.router.js";
 
 //comfig env
 dotenv.config();
@@ -28,6 +29,7 @@ app.use(morgan("dev"));
 //routers
 app.use("/api/v1/auth", authRouters);
 app.use("/api/v1/category", categoryRouters);
+app.use("/api/v1/product", productRouters);
 
 //rest api
 app.get("/", (req, res) => {
