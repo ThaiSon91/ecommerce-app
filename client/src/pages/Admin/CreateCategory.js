@@ -4,14 +4,14 @@ import AdminMenu from "../../components/layout/AdminMenu";
 import toast from "react-hot-toast";
 import axios from "axios";
 import CategoryForm from "../../components/Form/CategoryForm";
-import {} from "antd";
+import { Modal } from "antd";
 
 const CreateCategory = () => {
   const [categories, setCategories] = useState([]);
   const [name, setName] = useState("");
   const [visible, setVisible] = useState(false);
   const [selected, setSelected] = useState(null);
-  const [updatedName, setUpdateName] = useState("");
+  const [updatedName, setUpdatedName] = useState("");
 
   //handle Form
   const handleSubmit = async (e) => {
@@ -28,7 +28,7 @@ const CreateCategory = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error(data.message);
+      toast.error("Some went wrong in input from");
     }
   };
 
@@ -58,6 +58,33 @@ const CreateCategory = () => {
         `/api/v1/category/update-category/${selected._id}`,
         { name: updatedName }
       );
+      if (data.success) {
+        toast.success(`${updatedName} is updated`);
+        setSelected(null);
+        setUpdatedName("");
+        setVisible(false);
+        getAllCategory();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error("Something went wrong");
+    }
+  };
+
+  //delete category
+  const handleDelete = async (pId) => {
+    try {
+      // console.log(e);
+      const { data } = await axios.delete(
+        `/api/v1/category/delete-category/${pId}`
+      );
+      if (data.success) {
+        toast.success(`Category is deleted`);
+        getAllCategory();
+      } else {
+        toast.error(data.message);
+      }
     } catch (error) {
       toast.error("Something went wrong");
     }
@@ -89,7 +116,7 @@ const CreateCategory = () => {
                 </thead>
                 <tbody>
                   <tr>
-                    {category?.map((c) => (
+                    {categories?.map((c) => (
                       <>
                         <tr>
                           <td key={c._id}>{c.name}</td>
@@ -98,12 +125,18 @@ const CreateCategory = () => {
                               className="btn btn-primary ms-2"
                               onClick={() => {
                                 setVisible(true);
-                                setUpdateName(c.name);
+                                setUpdatedName(c.name);
+                                setSelected(c);
                               }}
                             >
                               Edit
                             </button>
-                            <button className="btn btn-danger ms-2">
+                            <button
+                              className="btn btn-danger ms-2"
+                              onClick={() => {
+                                handleDelete(c._id);
+                              }}
+                            >
                               Delete
                             </button>
                           </td>
