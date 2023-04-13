@@ -32,12 +32,12 @@ const CreateCategory = () => {
     }
   };
 
-  //get all cat
+  //get all category
   const getAllCategory = async () => {
     try {
       const { data } = await axios.get("/api/v1/category/get-category");
-      if (data.success) {
-        setCategories(data.category);
+      if (data?.success) {
+        setCategories(data?.category);
       }
     } catch (error) {
       console.log(error);
@@ -111,39 +111,37 @@ const CreateCategory = () => {
                 <thead>
                   <tr>
                     <th scope="col">Name</th>
-                    <th scope="col">Action</th>
+                    <th scope="col">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    {categories?.map((c) => (
-                      <>
-                        <tr>
-                          <td key={c._id}>{c.name}</td>
-                          <td>
-                            <button
-                              className="btn btn-primary ms-2"
-                              onClick={() => {
-                                setVisible(true);
-                                setUpdatedName(c.name);
-                                setSelected(c);
-                              }}
-                            >
-                              Edit
-                            </button>
-                            <button
-                              className="btn btn-danger ms-2"
-                              onClick={() => {
-                                handleDelete(c._id);
-                              }}
-                            >
-                              Delete
-                            </button>
-                          </td>
-                        </tr>
-                      </>
-                    ))}
-                  </tr>
+                  {categories?.map((c) => (
+                    <>
+                      <tr>
+                        <td key={c._id}>{c.name}</td>
+                        <td>
+                          <button
+                            className="btn btn-primary ms-2"
+                            onClick={() => {
+                              setVisible(true);
+                              setUpdatedName(c.name);
+                              setSelected(c);
+                            }}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            className="btn btn-danger ms-2"
+                            onClick={() => {
+                              handleDelete(c._id);
+                            }}
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    </>
+                  ))}
                 </tbody>
               </table>
             </div>
