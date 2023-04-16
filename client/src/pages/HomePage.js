@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../components/layout/layout";
 import axios from "axios";
-import { Checkbox } from "antd";
+import { Checkbox, Radio } from "antd";
+import { Prices } from "../components/Prices";
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [checked, setChecked] = useState([]);
+  const [radio, setRadio] = useState([]);
 
   //get all category
   const getAllCategory = async () => {
@@ -34,10 +36,6 @@ const HomePage = () => {
     }
   };
 
-  useEffect(() => {
-    getAllProducts();
-  }, []);
-
   //filter by cat
   const handleFilter = (value, id) => {
     let all = [...checked];
@@ -49,12 +47,34 @@ const HomePage = () => {
     setChecked(all);
   };
 
+  useEffect(() => {
+    if (!checked.length || !radio.length) getAllProducts();
+  }, [checked.length, radio.length]);
+
+  useEffect(() => {
+    if (checked.length || radio.length) filterProduct();
+  }, [checked, radio]);
+
+  //get filter product
+  const filterProduct = async () => {
+    try {
+      const { data } = await axios.post("/api/v1/product/product-filters", {
+        checked,
+        radio,
+      });
+      setProducts(data?.products);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Layout title={"Best offers"}>
       {/* <h1>HomePage</h1>
       <pre>{JSON.stringify(auth, null, 4)}</pre> */}
       <div className="row mt-3">
         <div className="col-md-2">
+          {/* Filter by Category */}
           <h4 className="text-center">Filter By Category</h4>
           <div className="d-flex flex-column">
             {categories?.map((c) => (
@@ -66,9 +86,21 @@ const HomePage = () => {
               </Checkbox>
             ))}
           </div>
+          {/* Filter by Price */}
+          <h4 className="text-center">Filter By Price</h4>
+          <div className="d-flex flex-column">
+            <Radio.Group onChange={(e) => setRadio(e.target.value)}>
+              {Prices?.map((p) => (
+                <div key={p._id}>
+                  <Radio value={p.array}>{p.name}</Radio>
+                </div>
+              ))}
+            </Radio.Group>
+          </div>
         </div>
         <div className="col-md-9">
           {JSON.stringify(checked, null, 4)}
+          {JSON.stringify(radio, null, 4)}
           <h1 className="text-center">All Products</h1>
           <div className="d-flex flex-wrap">
             {products?.map((p) => (
@@ -80,7 +112,10 @@ const HomePage = () => {
                 />
                 <div className="card-body">
                   <h5 className="card-title">{p.name}</h5>
-                  <p className="card-text">{p.description}</p>
+                  <p className="card-text">
+                    {p.description.substring(0, 30)}...
+                  </p>
+                  <p className="card-text">${p.price}</p>
                   <button className="btn btn-primary ms-1">More Details</button>
                   <button className="btn btn-secondary ms-1">
                     ADD TO CARD
