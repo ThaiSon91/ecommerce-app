@@ -4,7 +4,7 @@ import slugify from "slugify";
 
 export const createProductController = async (req, res) => {
   try {
-    const { name, description, price, category, quantity, shipping } =
+    const { name, slug, description, price, category, quantity, shipping } =
       req.fields;
     const { photo } = req.files;
     //alidation
@@ -113,7 +113,7 @@ export const productPhotoController = async (req, res) => {
 //delete product
 export const deleteProductController = async (req, res) => {
   try {
-    await productModel.findByIdAndUpdate(req.params.pid).select("-photo");
+    await productModel.findByIdAndDelete(req.params.pid).select("-photo");
     res.status(200).send({
       success: true,
       message: "Product Deleted Successfully",
@@ -132,7 +132,7 @@ export const deleteProductController = async (req, res) => {
 //update product controller
 export const updateProductController = async (req, res) => {
   try {
-    const { name, slug, description, price, category, quantity, shipping } =
+    const { name, description, price, category, quantity, shipping } =
       req.fields;
     const { photo } = req.fields;
     //alidation

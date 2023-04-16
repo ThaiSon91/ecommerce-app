@@ -8,6 +8,7 @@ import { Select } from "antd";
 import { useNavigate } from "react-router-dom";
 
 const { Option } = Select;
+
 const CreateProduct = () => {
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
@@ -55,9 +56,10 @@ const CreateProduct = () => {
 
       if (data?.success) {
         toast.success("Product Created Successfully");
-        navigate("/dashboard/admin/products");
+        // navigate("/dashboard/admin/products");
       } else {
         toast.error(data?.message);
+        navigate("/dashboard/admin/products");
       }
     } catch (error) {
       console.log(error);
@@ -73,7 +75,7 @@ const CreateProduct = () => {
             <AdminMenu />
           </div>
           <div className="col-md-9">
-            <h1>Craete Product</h1>
+            <h1>Create Product</h1>
             <div className="m-1 w-75">
               <Select
                 bordered={false}
@@ -97,7 +99,7 @@ const CreateProduct = () => {
                   {photo ? photo.name : "Upload Photo"}
                   <input
                     type="file"
-                    name=""
+                    name="photo"
                     accept="image/*"
                     onChange={(e) => setPhoto(e.target.files[0])}
                     hidden
@@ -168,7 +170,7 @@ const CreateProduct = () => {
                 </Select>
               </div>
               <div className="mb-3">
-                <button className="btn btn-primary" onclick={handleCreate}>
+                <button className="btn btn-primary" onClick={handleCreate}>
                   CREATE PRODUCT
                 </button>
               </div>
