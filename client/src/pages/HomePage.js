@@ -33,14 +33,17 @@ const HomePage = () => {
   //get products
   const getAllProducts = async () => {
     try {
-      const { data } = await axios.get("/api/v1/product/get-product");
+      setLoading(true);
+      const { data } = await axios.get(`/api/v1/product/product-list/${page}`);
+      setLoading(false);
       setProducts(data.products);
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   };
 
-  //get total
+  //get total count
   const getTotal = async () => {
     try {
       const { data } = await axios.get("/api/v1/product/product-count");
@@ -59,7 +62,7 @@ const HomePage = () => {
   const loadMore = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get("/api/v1/product/product-list/${page}");
+      const { data } = await axios.get(`/api/v1/product/product-list/${page}`);
       setLoading(false);
       setProducts([...products, ...data?.products]);
     } catch (error) {
