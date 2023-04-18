@@ -16,6 +16,6 @@ const SearchProvider = ({ children }) => {
 };
 
 //CUSTOM HOOK
-const useAuth = () => useContext(SearchContext);
+const useSearch = () => useContext(SearchContext);
 
 export { useSearch, SearchProvider };
