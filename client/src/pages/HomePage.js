@@ -35,6 +35,8 @@ const HomePage = () => {
     try {
       setLoading(true);
       const { data } = await axios.get(`/api/v1/product/product-list/${page}`);
+      // const { data } = await axios.get(`/api/v1/product/product-list/${page}`);
+
       setLoading(false);
       setProducts(data.products);
     } catch (error) {
@@ -167,6 +169,7 @@ const HomePage = () => {
               </div>
             ))}
           </div>
+          {/* <div>{total}</div> */}
           <div className="m-2 p-3">
             {products && products.length < total && (
               <button
