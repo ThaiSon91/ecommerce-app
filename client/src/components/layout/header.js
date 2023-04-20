@@ -43,24 +43,30 @@ const Header = () => {
 
               {/* dropdown category */}
               <li className="nav-item dropdown">
-                <a
+                <Link
                   className="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
+                  to={"/categories"}
                   data-bs-toggle="dropdown"
-                  aria-expanded="false"
                 >
-                  Category
-                </a>
-                {categories?.map((c) => (
-                  <ul className="dropdown-menu">
+                  Categories
+                </Link>
+                <ul className="dropdown-menu">
+                  <li>
+                    <Link className="dropdown-item" to={"/categories"}>
+                      All Categories
+                    </Link>
+                  </li>
+                  {categories?.map((c) => (
                     <li>
-                      <a className="dropdown-item" href="#">
+                      <Link
+                        className="dropdown-item"
+                        to={`/category/${c.slug}`}
+                      >
                         {c.name}
-                      </a>
+                      </Link>
                     </li>
-                  </ul>
-                ))}
+                  ))}
+                </ul>
               </li>
 
               {!auth.user ? (
