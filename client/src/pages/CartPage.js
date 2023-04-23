@@ -9,6 +9,22 @@ const CartPage = () => {
   const [cart, setCart] = useCart();
   const navigate = useNavigate();
 
+  //total price
+  const totalPrice = () => {
+    try {
+      let total = 0;
+      cart?.map((item) => {
+        total = total + item.price;
+      });
+      return total.toLocaleString("en-US", {
+        style: "currency",
+        currency: "USD",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   //remove item
   const removeCartItem = (pid) => {
     try {
@@ -16,6 +32,7 @@ const CartPage = () => {
       let index = myCart.findIndex((item) => item._id === pid);
       myCart.splice(index, 1);
       setCart(myCart);
+      localStorage.setItem("cart", JSON.stringify(myCart));
     } catch (error) {
       console.log(error);
     }
@@ -30,7 +47,7 @@ const CartPage = () => {
               {`Hello ${auth?.token && auth?.user?.name}`}
             </h1>
             <h4 className="text-center">
-              {cart?.length > 1
+              {cart?.length
                 ? `You Have ${cart.length} items in your cart ${
                     auth?.token ? "" : "Please login to checkout"
                   }`
@@ -65,7 +82,12 @@ const CartPage = () => {
               </div>
             ))}
           </div>
-          <div className="col-md-4">Checkout | Payment</div>
+          <div className="col-md-4">
+            <h2>Cart Summary</h2>
+            <p>Total | Checkout | Payment</p>
+            <hr />
+            <h4>Total: {totalPrice()}</h4>
+          </div>
         </div>
       </div>
     </Layout>
