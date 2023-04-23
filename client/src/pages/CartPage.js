@@ -8,6 +8,19 @@ const CartPage = () => {
   const [auth, setAuth] = useAuth();
   const [cart, setCart] = useCart();
   const navigate = useNavigate();
+
+  //remove item
+  const removeCartItem = (pid) => {
+    try {
+      let myCart = [...cart];
+      let index = myCart.findIndex((item) => item._id === pid);
+      myCart.splice(index, 1);
+      setCart(myCart);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Layout>
       <div className="container">
@@ -42,6 +55,12 @@ const CartPage = () => {
                   <p>{p.name}</p>
                   <p>{p.description.substring(0, 30)}</p>
                   <p>Price : {p.price}</p>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => removeCartItem(p._id)}
+                  >
+                    Remove
+                  </button>
                 </div>
               </div>
             ))}
