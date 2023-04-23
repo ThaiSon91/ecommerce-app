@@ -18,7 +18,7 @@ const Profile = () => {
 
   //get user data
   useEffect(() => {
-    const { name, email, phone, address } = auth.user;
+    const { name, email, phone, address } = auth?.user;
     setName(name);
     setPhone(phone);
     setEmail(email);
@@ -29,13 +29,23 @@ const Profile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/v1/auth/register", {
+      const { data } = await axios.put("/api/v1/auth/profile", {
         name,
         email,
         password,
         phone,
         address,
       });
+      if (data?.error) {
+        toast.error(data?.error);
+      } else {
+        setAuth({ ...auth, user: data?.updatedUser });
+        let ls = localStorage.getItem("auth");
+        ls = JSON.parse(ls);
+        ls.user = data.updatedUser;
+        localStorage.setItem("auth", JSON.stringify(ls));
+        toast.success("Profile Updated Successfully");
+      }
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong");
@@ -62,7 +72,6 @@ const Profile = () => {
                       className="form-control"
                       id="exampleInputEmail1"
                       placeholder="Enter Your Name"
-                      required
                       autoFocus
                     />
                   </div>
@@ -74,7 +83,7 @@ const Profile = () => {
                       className="form-control"
                       id="exampleInputEmail1"
                       placeholder="Enter Your Email "
-                      required
+                      disabled
                     />
                   </div>
                   <div className="mb-3">
@@ -85,7 +94,6 @@ const Profile = () => {
                       className="form-control"
                       id="exampleInputPassword1"
                       placeholder="Enter Your Password"
-                      required
                     />
                   </div>
                   <div className="mb-3">
@@ -96,7 +104,6 @@ const Profile = () => {
                       className="form-control"
                       id="exampleInputEmail1"
                       placeholder="Enter Your Phone"
-                      required
                     />
                   </div>
                   <div className="mb-3">
@@ -107,7 +114,6 @@ const Profile = () => {
                       className="form-control"
                       id="exampleInputEmail1"
                       placeholder="Enter Your Address"
-                      required
                     />
                   </div>
                   <button type="submit" className="btn btn-primary">
