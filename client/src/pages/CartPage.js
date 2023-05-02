@@ -5,6 +5,7 @@ import { useAuth } from "../context/auth";
 import { useNavigate } from "react-router-dom";
 import DropIn from "braintree-web-drop-in-react";
 import axios from "axios";
+import { toast } from "react-hot-toast";
 
 const CartPage = () => {
   const [auth, setAuth] = useAuth();
@@ -60,8 +61,20 @@ const CartPage = () => {
   //handle payment
   const handlePayment = async () => {
     try {
+      setLoading(true);
+      const { nonce } = await instance.requestPaymentMethod();
+      const { data } = await axios.post("/api/v1/product/braintree/payment", {
+        nonce,
+        cart,
+      });
+      setLoading(false);
+      localStorage.removeItem("cart");
+      setCart([]);
+      navigate("/dashboard/user/orders");
+      toast.success("Payment Completed Successfully");
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
   return (
@@ -145,21 +158,27 @@ const CartPage = () => {
                 )}
               </div>
             )}
-            <div className="mt2">
-              <DropIn
-                options={{
-                  authorization: clientToken,
-                  paypal: { flow: "vault" },
-                }}
-                onInstance={(instance) => setInstance(instance)}
-              />
-              <button
-                className="btn btn-primary"
-                onClick={handlePayment}
-                disabled={!loading || !instance || !auth?.user?.address}
-              >
-                Make Payment
-              </button>
+            <div className="mt-2">
+              {!clientToken || !cart?.length ? (
+                ""
+              ) : (
+                <>
+                  <DropIn
+                    options={{
+                      authorization: clientToken,
+                      paypal: { flow: "vault" },
+                    }}
+                    onInstance={(instance) => setInstance(instance)}
+                  />
+                  <button
+                    className="btn btn-primary"
+                    onClick={handlePayment}
+                    disabled={loading || !instance || !auth?.user?.address}
+                  >
+                    {loading ? "Processing ..." : "Make Payment"}
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>
